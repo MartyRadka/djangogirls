@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
-# tenhle tady byl vygenerovany puvodne
+# this part was created by default
 # from django.contrib import admin
 # from django.urls import path
 #
@@ -22,7 +22,8 @@ Including another URLconf
 #     path('admin/', admin.site.urls),
 # ]
 
-# tohle je v tutorialu!!!!
+
+# this is from tutorial Djangogirls!!!!
 # from django.conf.urls import include
 # from django.conf.urls import url
 # from django.contrib import admin
@@ -32,12 +33,27 @@ Including another URLconf
 #     url(r'', include('blog.urls')),
 # ]
 
-from django.conf.urls import include
+
+# from https://docs.djangoproject.com/en/2.0/ref/urls/; check if namespace is use correctly!!!
+# from django.urls import include, path
+# from django.contrib import admin
+#
+# app_name = 'blog'
+# urlpatterns = [
+#     path('admin/', admin.site.urls, name='admin'),
+#     path('', include('blog.urls')),
+# ]
+
+
+# my solution ?
+from django.conf.urls import url, include
 from django.contrib import admin
-from django.conf.urls import url
-from django.urls import path
 
 urlpatterns = [
-    path(r'^admin/', admin.site.urls),
+    url(r'^admin/', admin.site.urls, name='admin'),
     url(r'', include('blog.urls')),
 ]
+
+
+
+
