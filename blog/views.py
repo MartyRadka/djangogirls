@@ -14,4 +14,6 @@ def post_list(request):
     # request everything we receive from the user via the Internet
     # blog/post_list.html
     # {'posts': posts} = place in which we can add some things for the template to use
-    return render(request, 'blog/post_list.html', {'posts': posts})
+    # main_story = jinaappka.views.post_detail
+    # "main_story" : main_story
+    return render(request, 'post_list.html', {'posts': posts})
