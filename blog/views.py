@@ -1,24 +1,47 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import Post
+from .forms import PostForm
+from django.utils import timezone
 
 
 def post_list(request):
-    """ this function will put together our template blog/post_list.html & data """
-    # filtruje vsechny publikovane posty starsiho casu, nez ted, takze bude vlastne filtrovat vsechny
-    # lte - less that or equal to <=
-    # lt - less than <
-    # gte - greater than equal to >=
-    # gt - greater than >
-    # posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
     posts = Post.objects.all().order_by('published_date')
     # request everything we receive from the user via the Internet
     # blog/post_list.html
     # {'posts': posts} = place in which we can add some things for the template to use
-    # main_story = jinaappka.views.post_detail
-    # "main_story" : main_story
     return render(request, 'post_list.html', {'posts': posts})
 
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
     return render(request, 'post_detail.html', {'post': post})
+
+
+def post_new(request):
+    if request.method == 'POST':
+        form = PostForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.published_date = timezone.now()
+            post.save()
+            return redirect('post_detail', pk=post.pk)
+    else:
+        form = PostForm()
+
+    return render(request, 'post_edit.html', {'form': form})
+
+
+def post_edit(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    if request.method == "POST":
+        form = PostForm(request.POST, instance=post)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.published_date = timezone.now()
+            post.save()
+            return redirect('post_detail', pk=post.pk)
+    else:
+        form = PostForm(instance=post)
+    return render(request, 'post_edit.html', {'form': form})
